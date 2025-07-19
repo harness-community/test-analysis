@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
-	"strconv"
 
 	"github.com/harness-community/parse-test-reports/gojunit"
 	"github.com/mattn/go-zglob"
@@ -184,6 +184,9 @@ func ParseTestsWithQuarantine(paths []string, quarantineList map[string]interfac
 	stats := TestStats{}
 	nonQuarantinedFailures := 0
 	expiredTests := 0
+	var nonQuarantinedFailuresList []string
+	var expiredTestsList []string
+	var quarantinedFailuresList []string
 
 	if len(files) == 0 {
 		log.Errorln("could not find any files matching the provided report path")
@@ -210,9 +213,13 @@ func ParseTestsWithQuarantine(paths []string, quarantineList map[string]interfac
 					if !isQuarantined(testIdentifier, quarantineList, log) {
 						log.Infoln("Not Quarantined test failed:", testIdentifier)
 						nonQuarantinedFailures++
+						nonQuarantinedFailuresList = append(nonQuarantinedFailuresList, testIdentifier)
 					} else if isExpired(testIdentifier, quarantineList, log) {
 						log.Infoln("Quarantined test expired:", testIdentifier)
 						expiredTests++
+						expiredTestsList = append(expiredTestsList, testIdentifier)
+					} else {
+						quarantinedFailuresList = append(quarantinedFailuresList, testIdentifier)
 					}
 
 					if test.Result.Status == "failed" {
@@ -240,6 +247,11 @@ func ParseTestsWithQuarantine(paths []string, quarantineList map[string]interfac
 		stats.SkippedCount += fileStats.SkippedCount
 		stats.ErrorCount += fileStats.ErrorCount
 	}
+
+	// Populate quarantine lists in stats
+	stats.NonQuarantinedFailuresList = nonQuarantinedFailuresList
+	stats.ExpiredTestsList = expiredTestsList
+	stats.QuarantinedFailuresList = quarantinedFailuresList
 
 	if nonQuarantinedFailures > 0 || expiredTests > 0 {
 		// Construct the error message by concatenating string values

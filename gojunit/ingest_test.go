@@ -14,8 +14,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/harness/lite-engine/ti"
 )
 
 func TestExamplesInTheWild(t *testing.T) { //nolint:funlen
@@ -124,8 +122,8 @@ func TestExamplesInTheWild(t *testing.T) { //nolint:funlen
 					Name:       "testStdoutStderr",
 					Classname:  "com.example.FooTest",
 					DurationMs: 1234560,
-					Result: ti.Result{
-						Status: ti.StatusFailed,
+					Result: Result{
+						Status: StatusFailed,
 						Type:   "java.lang.AssertionError",
 						Desc:   "java.lang.AssertionError\n\tat com.example.FooTest.testStdoutStderr(FooTest.java:13)\n",
 					},
@@ -152,8 +150,8 @@ func TestExamplesInTheWild(t *testing.T) { //nolint:funlen
 					Name:       "testSomething()",
 					Classname:  "TestClassSample",
 					DurationMs: 342,
-					Result: ti.Result{
-						Status:  ti.StatusFailed,
+					Result: Result{
+						Status:  StatusFailed,
 						Message: "XCTAssertTrue failed",
 						Desc:    "\n            ",
 					},
@@ -189,8 +187,8 @@ func TestExamplesInTheWild(t *testing.T) { //nolint:funlen
 					Classname:  "SampleTest",
 					Filename:   "/untitled/tests/SampleTest.php",
 					DurationMs: 5,
-					Result: ti.Result{
-						Status: ti.StatusPassed,
+					Result: Result{
+						Status: StatusPassed,
 					},
 					Properties: map[string]string{
 						"assertions": "1",

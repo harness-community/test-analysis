@@ -14,11 +14,14 @@ type Plugin struct {
 }
 
 type TestStats struct {
-	TestCount    int
-	FailCount    int
-	PassCount    int
-	SkippedCount int
-	ErrorCount   int
+	TestCount                  int
+	FailCount                  int
+	PassCount                  int
+	SkippedCount               int
+	ErrorCount                 int
+	NonQuarantinedFailuresList []string
+	ExpiredTestsList           []string
+	QuarantinedFailuresList    []string
 }
 
 // Exec executes the plugin.
@@ -59,6 +62,10 @@ func (p Plugin) Exec() error {
 
 	log.Infof("Final test statistics: Total: %d, Passed: %d, Failed: %d, Skipped: %d, Errors: %d",
 		stats.TestCount, stats.PassCount, stats.FailCount, stats.SkippedCount, stats.ErrorCount)
+
+	log.Infof("nonQuarantinedFailures: %s", stats.NonQuarantinedFailuresList)
+	log.Infof("expiredTests: %s", stats.ExpiredTestsList)
+	log.Infof("quarantinedFailures: %s", stats.QuarantinedFailuresList)
 
 	// Handle the error after writing stats
 	if err != nil {
