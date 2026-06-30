@@ -12,11 +12,9 @@ $ go build
 
 ## Docker
 
-Build the Docker image with the following commands:
+Build the Docker image with the following command:
 
 ```sh
-$ GOOS=linux GOARCH=amd64 go build
-
 $ docker buildx build -f docker/Dockerfile -t harnesscommunity/parse-test-reports:latest --platform=linux/amd64 --load .
 ```
 
